@@ -16,8 +16,6 @@ from torch.optim import lr_scheduler
 from torch.utils.data.sampler import RandomSampler, SequentialSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from util import GradualWarmupSchedulerV2
-import apex
-from apex import amp
 from dataset import get_df, get_transforms, MelanomaDataset
 from models import Effnet_Melanoma, Resnest_Melanoma, Seresnext_Melanoma
 
@@ -181,8 +179,6 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
         out_dim=args.out_dim,
         pretrained=True
     )
-    if DP:
-        model = apex.parallel.convert_syncbn_model(model)
     model = model.to(device)
 
     auc_max = 0.
