@@ -188,10 +188,7 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
     model_file3 = os.path.join(args.model_dir, f'{args.kernel_type}_final_fold{fold}.pth')
 
     optimizer = optim.Adam(model.parameters(), lr=args.init_lr)
-    if args.use_amp:
-        model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
-    if DP:
-        model = nn.DataParallel(model)
+    model = nn.DataParallel(model)
 #     scheduler_cosine = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.n_epochs - 1)
     scheduler_cosine = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, args.n_epochs - 1)
     scheduler_warmup = GradualWarmupSchedulerV2(optimizer, multiplier=10, total_epoch=1, after_scheduler=scheduler_cosine)
